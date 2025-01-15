@@ -1,14 +1,7 @@
-import express from "express";
-import cors from "cors"
-import { authRoutes } from "./routes/authRoutes";
-const app=express();
+import app from "./app";
 
-app.use(express.json());
-app.use(cors());
+const PORT = process.env.PORT || 3000;
 
-app.use("/auth",authRoutes);
-
-const PORT=3000;
-app.listen(PORT,()=>{
-    console.log(`listening on port ${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
