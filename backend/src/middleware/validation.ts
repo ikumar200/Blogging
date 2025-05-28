@@ -14,8 +14,10 @@ export const validatePost=(req:Request,res:Response,next:NextFunction)=>{
 export const validateUser=(req:Request,res:Response,next:NextFunction)=>{
     try{
         createUserSchema.parse(req.body);
+        console.log(req.body);
         next();
     }catch(err){
+        // console.log(err);
         res.status(400).json({msg:err})
     };
 };
