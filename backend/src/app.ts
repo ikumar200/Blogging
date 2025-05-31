@@ -4,11 +4,14 @@ import userRoutes from "./routes/userRoutes";
 
 const app: Application = express();
 
-// Middleware
+
 app.use(express.json());
 
-// Routes
+// authentication routes
+app.use("/auth",authRoutes);
+app.use("/admin",adminRoutes);
 app.use("/posts", postRoutes);
 app.use("/users", userRoutes);
+app.use("/comments",commentRoutes);
 
 export default app;

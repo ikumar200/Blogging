@@ -17,6 +17,7 @@ import { createPost,getPostById,getAllPosts } from "../models/postModel";
 //         res.status(500).json({msg:err});
 //     }
 // };
+
 export const getPost = async (req: Request<{id:string}>, res: Response):Promise<void> => {
     const { id } = req.params;
     try {
@@ -39,7 +40,6 @@ export const getPosts = async (req: Request, res: Response) => {
       res.status(500).json({ message: error });
     }
   };
-
 
 export const addPost=async(req: Request, res: Response)=>{
         const {title,body,authorId}=req.body;
