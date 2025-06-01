@@ -1,11 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
-dotenv.config();
+import { generateToken,verifyToken } from "../utils/jwt";
 
-const jwt_key = process.env.JWT_SECRET || "default_secret";
-
-interface JwtPayload {
+export interface MyJwtPayload {
   email: string;
   name?: string;
   userId?: number;
@@ -14,10 +11,11 @@ interface JwtPayload {
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user?: MyJwtPayload | string;
     }
   }
 }
+
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
@@ -30,17 +28,10 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, jwt_key) as JwtPayload;
+    const decoded = verifyToken(token);
     req.user = decoded;
     next(); // continue to next middleware or route
   } catch (err) {
     res.status(403).json({ message: "Forbidden: Invalid or expired token" });
   }
-};
-
-// ✅ Utility function to generate JWT token
-export const generateToken = (payload: JwtPayload): string => {
-  return jwt.sign(payload, jwt_key, {
-    expiresIn: "1h", // Customize as needed
-  });
 };

@@ -4,8 +4,8 @@ import { validatePost } from "../middleware/validation";
 
 const router=Router();
 
-router.get("/",getPosts);
+router.get("/get",getPosts);
 router.get("/:id",getPost);
-router.post("/",validatePost,addPost);
+router.post("/add",validatePost,addPost);
 
 export default router;

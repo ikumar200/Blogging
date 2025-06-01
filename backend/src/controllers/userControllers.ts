@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createUser, getUserById, getAllUsers } from "../models/userModel";
-import { generateToken } from "../middleware/authentication";
+import { generateToken } from "../utils/jwt"
 
 export const getUser = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
   const { id } = req.params;
@@ -10,7 +10,8 @@ export const getUser = async (req: Request<{ id: string }>, res: Response): Prom
       res.status(404).json({ msg: "User not found" });
       return;
     }
-    res.json(user);
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error", error: err });
   }
@@ -19,26 +20,9 @@ export const getUser = async (req: Request<{ id: string }>, res: Response): Prom
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await getAllUsers();
-    res.json(users);
+    const usersWithoutPasswords = users.map(({ password, ...rest }) => rest);
+    res.json(usersWithoutPasswords);
   } catch (err) {
     res.status(500).json({ msg: "Something went wrong", error: err });
-  }
-};
-
-export const addUser = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, password } = req.body;
-  try {
-    const user = await createUser({ name, email, password });
-
-    // ✅ Generate token here
-    const token = generateToken({
-      email: user.email,
-      name: user.name,
-      userId: user.id,
-    });
-
-    res.status(201).json({ user, token });
-  } catch (err) {
-    res.status(500).json({ message: "User creation failed", error: err });
   }
 };

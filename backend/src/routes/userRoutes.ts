@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { addUser, getUser, getUsers } from "../controllers/userControllers";
+import { getUser, getUsers } from "../controllers/userControllers";
+import { addUser } from "../controllers/authControllers";
 import { validateUser } from "../middleware/validation";
 import { authenticateJWT } from "../middleware/authentication";
 
 const router = Router();
 
-// Public route: Register user
-router.post("/", validateUser, addUser);
+
 
 // Protected routes
 router.get("/", authenticateJWT, getUsers);
